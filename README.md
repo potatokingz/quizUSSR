@@ -31,3 +31,8 @@
 
 - Full Soviet aesthetic
 - Purpose: Humor / retro quiz simulator
+
+# Credits:
+
+potatokingz
+Slav719
