@@ -1,4 +1,5 @@
 import sys
+import random
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox
 )
@@ -8,7 +9,7 @@ from PyQt6.QtCore import Qt
 class USSRQuiz(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("USSR Loyality Test")
+        self.setWindowTitle("USSR")
         self.setFixedSize(400, 600)
         self.setStyleSheet("background-color: #CC0000;")  # Soviet red
 
@@ -16,7 +17,7 @@ class USSRQuiz(QWidget):
         self.layout.setContentsMargins(20, 20, 20, 20)
         self.layout.setSpacing(15)
 
-        self.title = QLabel("☭ USSR Loyality Quiz ☭")
+        self.title = QLabel("☭ USSR ☭")
         self.title.setFont(QFont("Arial", 18, QFont.Weight.Bold))
         self.title.setStyleSheet("color: #FFD700;")  # Gold text
         self.title.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -64,6 +65,7 @@ class USSRQuiz(QWidget):
             ("What is official language of the USSR?\n(a) Russian\n(b) Ukrainian\n(c) Belarusian", ["a", "russian"]),
             ("Who was the first cosmonaut to orbit Earth?\n(a) Yuri Gagarin\n(b) Neil Armstrong\n(c) Valentina Tereshkova", ["a", "yuri gagarin"])
         ]
+        random.shuffle(self.q_and_a)  # Randomize questions
 
         self.setLayout(self.layout)
 
@@ -73,30 +75,33 @@ class USSRQuiz(QWidget):
             if answer == "yes":
                 self.show_message("Great lil bro!!! You are now part of the USSR!")
                 self.stage = "info_name"
-                self.prompt.setText("Whats your name Comradez?:")
+                self.prompt.setText("What's your name, Comradez?:")
                 self.answer_input.clear()
             elif answer == "no":
-                self.show_message("Verry well Comradez! Your exsexution is tomorow!Prepare")
+                self.show_message("Verry well Comradez! Your exsexution is tomorow! Prepare")
                 self.close()
             else:
-                self.show_message("whats that use 'yes' or 'no' ")
+                self.show_message("whats that use 'yes' or 'no'")
                 self.answer_input.clear()
 
         elif self.stage == "info_name":
-            if answer:
+            if answer.isalpha():
                 self.comrade_name = answer.title()
                 self.show_message(f"{self.comrade_name}: Hello my name is {self.comrade_name}")
                 self.stage = "info_age"
                 self.prompt.setText(f"USSR Agent: How old are you {self.comrade_name}?:")
                 self.answer_input.clear()
             else:
-                self.show_message("Type your name Comradez!")
+                self.show_message("Name must contain letters only, Comradez!")
 
         elif self.stage == "info_age":
             if answer.isdigit():
                 self.comrade_age = int(answer)
                 if self.comrade_age < 17:
-                    self.show_message(f"{self.comrade_name}, your too young for the USSR")
+                    self.show_message(f"{self.comrade_name}, you're too young for the USSR")
+                    self.close()
+                elif self.comrade_age > 70:
+                    self.show_message(f"{self.comrade_name}, you're too old to serve the USSR")
                     self.close()
                 else:
                     self.show_message(f"{self.comrade_name}, great comeradez, your USSR IQ will be revealed shortly with this Quiz...")
@@ -105,7 +110,7 @@ class USSRQuiz(QWidget):
                     self.score = 0
                     self.show_next_question()
             else:
-                self.show_message("Type your age number only Comradez!")
+                self.show_message("Type your age number only, Comradez!")
 
         elif self.stage == "quiz":
             self.check_answer(answer)
@@ -135,13 +140,13 @@ class USSRQuiz(QWidget):
         self.prompt.setText(f"{self.comrade_name}, you scored {self.score} out of {len(self.q_and_a)}.")
 
         if self.score >= min_pass:
-            self.show_message("You are worthy to serve the USSR! The Party salutes you!")
+            self.show_message("You are worthy to serve the USSR! The Party salutes you!\n\n⚠️ Updates are coming soon!")
         else:
-            self.show_message("You fail the Party's test. Study hard and try again.")
+            self.show_message("You failed the Party's test. Study hard and try again.\n\n⚠️ Updates are coming soon!")
 
     def show_message(self, text):
         msg = QMessageBox(self)
-        msg.setWindowTitle("USSR Loyality Test")
+        msg.setWindowTitle("USSR")
         msg.setText(text)
         msg.exec()
 
